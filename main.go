@@ -85,9 +85,9 @@ type SleepWork struct {
 // SleepWork.Run run what need SleepWork to do.
 func (w SleepWork) Run(thdID int) (err error) {
 	var gID, _ = GetGoroutineID()
-	fmt.Printf("thread %d (gID=%d) start work %v\n", thdID, gID, w)
+	fmt.Printf("thread %d (goroutine id %d) start work %v\n", thdID, gID, w)
 	time.Sleep(time.Duration(w.MsDuration) * time.Millisecond)
-	fmt.Printf("thread %d (gID=%d) done work %v\n", thdID, gID, w)
+	fmt.Printf("thread %d (goroutine id %d) done work %v\n", thdID, gID, w)
 	return nil
 }
 
