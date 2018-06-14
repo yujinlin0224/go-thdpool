@@ -1,4 +1,4 @@
-package mul_thd
+package thd_pool
 
 import (
 	"testing"

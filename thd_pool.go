@@ -1,13 +1,9 @@
-package mul_thd
+package thd_pool
 
 import (
 	"sync"
 )
 
-// Worker is a interface include a Work function that called in thread pool.
-type Worker interface {
-	Work(thdID int, mutex *sync.Mutex) error
-}
 
 // ThdPool is a thread pool for Worker.
 type ThdPool struct {
@@ -32,18 +28,18 @@ func (tp *ThdPool) ThdCnt() int {
 	return tp.thdCnt
 }
 
-// AddWorker adds the Worker to the channel to wait for calling it.
+// AddWorker adds the Worker to the workers channel to wait for calling it.
 func (tp *ThdPool) AddWorker(worker Worker) {
 	tp.workers <- worker
 }
 
-// Close closes the channel and wait for each Work of all Worker interfaces done.
+// Close closes the workers channel and wait them done.
 func (tp *ThdPool) Close() {
 	defer tp.wg.Wait()
 	close(tp.workers)
 }
 
-// Work run the thread pool.
+// Work runs the thread pool.
 func (tp *ThdPool) Run() (errs []error) {
 	for i := 0; i < tp.thdCnt; i++ {
 		tp.wg.Add(1)
