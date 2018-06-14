@@ -2,16 +2,14 @@ package mul_thd
 
 import (
 	"sync"
-	"bytes"
-	"runtime"
-	"strconv"
 )
 
-// Runner is a interface can call Run to run Runner with multi-threading.
+// Runner is a interface used in MulThd.
 type Runner interface {
 	Run(thdID int, mutex *sync.Mutex) error
 }
 
+// MulThd can call each Run of all Runner interfaces with multi-threading.
 type MulThd struct {
 	wg    *sync.WaitGroup
 	mutex *sync.Mutex
@@ -20,6 +18,7 @@ type MulThd struct {
 	ThdCnt int
 }
 
+// New make a MulThd with count of threads.
 func New(thdCnt int) (mulThd *MulThd) {
 	mulThd = new(MulThd)
 	mulThd.ThdCnt = thdCnt
@@ -30,15 +29,18 @@ func New(thdCnt int) (mulThd *MulThd) {
 	return
 }
 
+// AddRunner add the runner to the channel to wait for calling it.
 func (mt *MulThd) AddRunner(runner Runner) {
 	mt.rChan <- runner
 }
 
+// Close close the channel and wait for each Run of all Runner interfaces done.
 func (mt *MulThd) Close() {
 	defer mt.wg.Wait()
 	close(mt.rChan)
 }
 
+// Run call each Run of all Runner interfaces with multi-threading.
 func (mt *MulThd) Run() (errs []error) {
 	for i := 0; i < mt.ThdCnt; i++ {
 		// Use goroutine to run all threads.
@@ -50,7 +52,7 @@ func (mt *MulThd) Run() (errs []error) {
 						errs = append(errs, err)
 					}
 				} else {
-					// When no runner waiting for run, done this thread.
+					// When no runner waiting to run, done this thread.
 					mt.wg.Done()
 					return
 				}
@@ -60,10 +62,3 @@ func (mt *MulThd) Run() (errs []error) {
 	return
 }
 
-// GetGoroutineID get goroutine id from the stack of runtime.
-func GetGoroutineID() (uint64, error) {
-	var buf = make([]byte, 64)
-	var prefix = []byte("goroutine ")
-	buf = bytes.TrimPrefix(buf[:runtime.Stack(buf, false)], prefix)
-	return strconv.ParseUint(string(buf[:bytes.IndexByte(buf, ' ')]), 10, 64)
-}
