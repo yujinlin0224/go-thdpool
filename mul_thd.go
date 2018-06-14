@@ -2,7 +2,6 @@ package mul_thd
 
 import (
 	"sync"
-	"fmt"
 	"bytes"
 	"runtime"
 	"strconv"
@@ -52,7 +51,6 @@ func (mt *MulThd) Run() (errs []error) {
 					}
 				} else {
 					// When no runner waiting for run, done this thread.
-					fmt.Printf("thread %d done.\n", thdID)
 					mt.wg.Done()
 					return
 				}
