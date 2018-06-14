@@ -46,7 +46,7 @@ func Test(t *testing.T) {
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < *workCnt; i++ {
 		var work = &sleepWork{i, int(rand.Int63n(10000))}
-		fmt.Printf("add runner (type work) %v to mulThd\n", *work)
+		fmt.Printf("add runner (type sleepWork) %v to mulThd\n", *work)
 		mulThd.AddRunner(work)
 	}
 	
