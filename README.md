@@ -1,4 +1,4 @@
-# Go multi-threading package
+# Go thread pool package
 
 ## Usage
-Unfinished. Can refer to `mul_thd_test.go` and the documentation comments in `mul_thd.go`.
+Unfinished. Can refer to the documentation comments in `thd_pool.go` and `thd_pool_test.go`.
