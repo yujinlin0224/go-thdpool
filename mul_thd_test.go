@@ -18,7 +18,7 @@ type sleepWork struct {
 	workID, msDuration int
 }
 
-// SleepWork.Run run what need SleepWork to do.
+// SleepWork.Run run what SleepWork need to do.
 func (sw *sleepWork) Run(thdID int, mutex *sync.Mutex) (err error) {
 	var gID, _ = getGoroutineID()
 	fmt.Printf("thread %d (goroutine id %d) start work %v\n", thdID, gID, *sw)
