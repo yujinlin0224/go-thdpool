@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/../go_mul_thd_test/.idea/go_mul_thd_test.iml" filepath="$PROJECT_DIR$/../go_mul_thd_test/.idea/go_mul_thd_test.iml" />
+      <module fileurl="file://$PROJECT_DIR$/../mul_thd/.idea/mul_thd.iml" filepath="$PROJECT_DIR$/../mul_thd/.idea/mul_thd.iml" />
     </modules>
   </component>
 </project>

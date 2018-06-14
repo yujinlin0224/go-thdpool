@@ -1,3 +1,3 @@
-# Go multi-threading test
+# Go multi-threading package
 
 Unfinished.
