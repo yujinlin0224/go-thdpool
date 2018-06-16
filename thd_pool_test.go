@@ -32,8 +32,8 @@ func (sw *sleepWork) Work(thdID int, mutex *sync.Mutex) (err error) {
 
 // Test is a function for go test.
 func Test(t *testing.T) {
-	var thdCnt = flag.Int("t", 10, "Count of threads.")
-	var workCnt = flag.Int("w", 100, "Count of works.")
+	var thdCnt = flag.Int("t", 100, "Count of threads.")
+	var workCnt = flag.Int("w", 1000, "Count of works.")
 	flag.Parse()
 	
 	// Make thdPool (type ThdPool) and run it.
