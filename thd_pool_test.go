@@ -12,13 +12,13 @@ import (
 	"time"
 )
 
-// SleepWork is a struct implement Worker with
+// sleepWork is a struct implement Worker with
 // work ID and sleep duration of milliseconds.
 type sleepWork struct {
 	workID, msDuration int
 }
 
-// SleepWork.Work does something need to do in thread pool.
+// sleepWork.Work does something need to do in thread pool.
 func (sw *sleepWork) Work(thdID int, mutex *sync.Mutex) (err error) {
 	var gID uint64
 	if gID, err = getGoroutineID(); err != nil {
