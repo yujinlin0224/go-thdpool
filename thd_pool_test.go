@@ -1,15 +1,15 @@
 package thd_pool
 
 import (
-	"testing"
-	"flag"
-	"math/rand"
-	"time"
-	"fmt"
-	"sync"
 	"bytes"
+	"flag"
+	"fmt"
+	"math/rand"
 	"runtime"
 	"strconv"
+	"sync"
+	"testing"
+	"time"
 )
 
 // SleepWork is a struct implement Worker with
