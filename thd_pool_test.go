@@ -20,11 +20,14 @@ type sleepWork struct {
 
 // SleepWork.Work does something need to do in thread pool.
 func (sw *sleepWork) Work(thdID int, mutex *sync.Mutex) (err error) {
-	var gID, _ = getGoroutineID()
+	var gID uint64
+	if gID, err = getGoroutineID(); err != nil {
+		return
+	}
 	fmt.Printf("thread %d (goroutine id %d) start work %v\n", thdID, gID, *sw)
 	time.Sleep(time.Duration(sw.msDuration) * time.Millisecond)
 	fmt.Printf("thread %d (goroutine id %d) done work %v\n", thdID, gID, *sw)
-	return nil
+	return
 }
 
 // Test is a function for go test.
@@ -54,8 +57,7 @@ func Test(t *testing.T) {
 
 // getGoroutineID gets goroutine id from the stack of runtime.
 func getGoroutineID() (uint64, error) {
-	var buf = make([]byte, 64)
-	var prefix = []byte("goroutine ")
+	var buf, prefix = make([]byte, 64), []byte("goroutine ")
 	buf = bytes.TrimPrefix(buf[:runtime.Stack(buf, false)], prefix)
 	return strconv.ParseUint(string(buf[:bytes.IndexByte(buf, ' ')]), 10, 64)
 }
