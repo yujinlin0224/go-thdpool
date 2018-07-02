@@ -1,4 +1,4 @@
-package thd_pool
+package thdpool
 
 import (
 	"bytes"
