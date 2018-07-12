@@ -37,7 +37,7 @@ func Test(t *testing.T) {
 	flag.Parse()
 	
 	// Make thdPool (type ThdPool) and run it.
-	var thdPool = New(*thdCnt)
+	var thdPool = New(*thdCnt, nil)
 	defer thdPool.Close()
 	if errs := thdPool.Run(); len(errs) > 0 {
 		for _, err := range errs {

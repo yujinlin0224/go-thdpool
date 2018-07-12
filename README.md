@@ -5,7 +5,7 @@ Use below command to get this package:
 ```sh
 $ go get github.com/abc1236762/thdpool
 ```
-And add below code to your project before using it:
+And add below code to your project file before using it:
 ```go
 import `github.com/abc1236762/thdpool`
 ``` 

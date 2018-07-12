@@ -4,7 +4,6 @@ import (
 	"sync"
 )
 
-
 // ThdPool is a thread pool for Worker.
 type ThdPool struct {
 	wg      *sync.WaitGroup
@@ -13,11 +12,15 @@ type ThdPool struct {
 	thdCnt  int
 }
 
-// New makes a thread pool with count of threads.
-func New(thdCnt int) *ThdPool {
+// New makes a thread pool with count of threads and a mutex.
+// if mutex is nil, it will be newed it.
+func New(thdCnt int, mutex *sync.Mutex) *ThdPool {
+	if mutex == nil {
+		mutex = new(sync.Mutex)
+	}
 	return &ThdPool{
 		wg:      new(sync.WaitGroup),
-		mutex:   new(sync.Mutex),
+		mutex:   mutex,
 		workers: make(chan Worker, thdCnt),
 		thdCnt:  thdCnt,
 	}
