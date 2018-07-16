@@ -3,7 +3,7 @@ package thdpool
 import (
 	"bytes"
 	"flag"
-	"fmt"
+	`log`
 	"math/rand"
 	"runtime"
 	"strconv"
@@ -12,32 +12,31 @@ import (
 	"time"
 )
 
-// sleepWork is a struct implement Worker with
-// work ID and sleep duration of milliseconds.
+// sleepWork is a struct implement Worker with work ID and sleep duration of milliseconds.
 type sleepWork struct {
 	workID, msDuration int
 }
 
-// sleepWork.Work does something need to do in thread pool.
-func (sw *sleepWork) Work(thdID int, mutex *sync.Mutex) (err error) {
+// Work does something need to do in thread pool.
+func (sw *sleepWork) Work(thdID int, mutex sync.Locker) (err error) {
 	var gID uint64
 	if gID, err = getGoroutineID(); err != nil {
 		return
 	}
-	fmt.Printf("thread %d (goroutine id %d) start work %v\n", thdID, gID, *sw)
+	log.Printf("thread %d (goroutine id %d) start work %v\n", thdID, gID, *sw)
 	time.Sleep(time.Duration(sw.msDuration) * time.Millisecond)
-	fmt.Printf("thread %d (goroutine id %d) done work %v\n", thdID, gID, *sw)
+	log.Printf("thread %d (goroutine id %d) done work %v\n", thdID, gID, *sw)
 	return
 }
 
-// Test is a function for go test.
-func Test(t *testing.T) {
+// TestThdPool is a function for go test to test thdpool package.
+func TestThdPool(t *testing.T) {
 	var thdCnt = flag.Int("t", 100, "Count of threads.")
 	var workCnt = flag.Int("w", 1000, "Count of works.")
 	flag.Parse()
 	
-	// Make thdPool (type ThdPool) and run it.
-	var thdPool = New(*thdCnt, nil)
+	// Make a new thread pool and run it.
+	var thdPool = NewWithMutex(*thdCnt)
 	defer thdPool.Close()
 	if errs := thdPool.Run(); len(errs) > 0 {
 		for _, err := range errs {
@@ -45,11 +44,11 @@ func Test(t *testing.T) {
 		}
 	}
 	
-	// Add all works to thdPool.
+	// Add all works to the thread pool.
 	rand.Seed(time.Now().UnixNano())
 	for i := 0; i < *workCnt; i++ {
 		var work = &sleepWork{i, int(rand.Int63n(10000))}
-		fmt.Printf("add worker (type sleepWork) %v to thread pool\n", *work)
+		log.Printf("add worker (type sleepWork) %v to thread pool\n", *work)
 		thdPool.AddWorker(work)
 	}
 	

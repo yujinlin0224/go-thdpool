@@ -7,23 +7,33 @@ import (
 // ThdPool is a thread pool for Worker.
 type ThdPool struct {
 	wg      *sync.WaitGroup
-	mutex   *sync.Mutex
+	locker  sync.Locker
 	workers chan Worker
 	thdCnt  int
 }
 
-// New makes a thread pool with count of threads and a mutex.
-// if mutex is nil, it will be newed it.
-func New(thdCnt int, mutex *sync.Mutex) *ThdPool {
-	if mutex == nil {
-		mutex = new(sync.Mutex)
+// New makes a thread pool with count of threads and a locker.
+// Note that locker cannot be nil.
+func New(thdCnt int, locker sync.Locker) *ThdPool {
+	if locker == nil {
+		panic("thdpool: locker cannot be nil")
 	}
 	return &ThdPool{
 		wg:      new(sync.WaitGroup),
-		mutex:   mutex,
+		locker:  locker,
 		workers: make(chan Worker, thdCnt),
 		thdCnt:  thdCnt,
 	}
+}
+
+// NewWithMutex makes a thread pool include a new locker with sync.Mutex type with count of threads.
+func NewWithMutex(thdCnt int) *ThdPool {
+	return New(thdCnt, new(sync.Mutex))
+}
+
+// NewWithRWMutex makes a thread pool include a new locker with sync.RWMutex type with count of threads.
+func NewWithRWMutex(thdCnt int) *ThdPool {
+	return New(thdCnt, new(sync.RWMutex))
 }
 
 // ThdCnt gets count of threads.
@@ -42,7 +52,7 @@ func (tp *ThdPool) Close() {
 	close(tp.workers)
 }
 
-// Work runs the thread pool.
+// Run runs the thread pool.
 func (tp *ThdPool) Run() (errs []error) {
 	for i := 0; i < tp.thdCnt; i++ {
 		tp.wg.Add(1)
@@ -51,7 +61,7 @@ func (tp *ThdPool) Run() (errs []error) {
 			// Get next Worker when last one was done until all done.
 			defer tp.wg.Done()
 			for worker := range tp.workers {
-				if err := worker.Work(thdID, tp.mutex); err != nil {
+				if err := worker.Work(thdID, tp.locker); err != nil {
 					errs = append(errs, err)
 				}
 			}
