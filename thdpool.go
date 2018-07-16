@@ -16,7 +16,7 @@ type ThdPool struct {
 // Note that locker cannot be nil.
 func New(thdCnt int, locker sync.Locker) *ThdPool {
 	if locker == nil {
-		panic("thdpool: locker cannot be nil")
+		panic("thdpool: locker should not be nil")
 	}
 	return &ThdPool{
 		wg:      new(sync.WaitGroup),
