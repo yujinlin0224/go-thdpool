@@ -3,11 +3,11 @@
 ## Setup
 Use below command to get this package:
 ```sh
-$ go get github.com/abc1236762/thdpool
+$ go get github.com/abc1236762/go-thdpool
 ```
 And add below code to your project file before using it:
 ```go
-import `github.com/abc1236762/thdpool`
+import `github.com/abc1236762/go-thdpool`
 ``` 
 
 ## Usage
